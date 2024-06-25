@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Cricket Game</h1>
+
+    <button onclick="
+    let computerChoice=getComputerNumber();
+    let resultMesg=getResult('Bat' , computerChoice);
+    showResult('Bat' , computerChoice, resultMesg);
+    ">
+     <img src="bat.png" alt="Bat Image" class="choice-image">  </button>
+
+    <button onclick="
+    computerChoice=getComputerNumber();
+    resultMesg=getResult('Bowl' , computerChoice);
+    showResult('Bowl' , computerChoice, resultMesg);
+    ">
+    <img src="ball.png" alt="Ball Image" class="choice-image"></button>
+
+    <button onclick="
+    computerChoice=getComputerNumber();
+    resultMesg=getResult('Stump' , computerChoice);
+    showResult('Stump' , computerChoice, resultMesg);
+    ">
+    <img src="stump.png" alt="Stump Image" class="choice-image"></button>
+
+
+    <h3 id="user-move"></h3>
+    <h3 id="computer-move"></h3>
+    <h3 id="result"></h3>
+    <h3 id="score"></h3>
+
+
+    <button onclick="
+    localStorage.clear()
+     resetScore();
+    ">RESET </button>
+
+
+
+
+
+
+    <script>
+
+        let scoreStr= localStorage.getItem('Score');
+        let score;
+        resetScore(scoreStr);
+
+        function resetScore(scoreStr){
+            score = scoreStr ? JSON.parse(scoreStr) : {
+            win : 0,
+            lost : 0,
+            tie : 0,
+            };
+        
+
+          score.displayScore =function (){
+            return `Score:Won:${score.win}, Lost:${score.lost}, Tie: ${score.tie}`;
+
+            }
+            showResult();
+        }    
+        
+
+        function getComputerNumber(){
+            let randomNumber=Math.random() * 3;
+            if(randomNumber>0 && randomNumber<=1){
+                return 'Bat';
+            }
+            else if(randomNumber>1 && randomNumber<=2){
+                return 'Bowl';
+            }
+            else{
+                return 'Stump';
+            }
+        }
+
+        function getResult(userMove , computerMove){
+            if(userMove==='Bat'){
+                if(computerMove==='Bowl'){
+                    score.win++;
+                    return 'User-win';
+                }
+                else if(computerMove==='Bat'){
+                    score.tie++;
+                    return 'Game-is-Tie';
+                }
+                else if(computerMove==='Stump'){
+                    score.lost++;
+                    return 'Compuetr-Win';
+                }
+            }
+
+            else if(userMove==='Bowl'){
+                if(computerMove==='Bat'){
+                    score.lost++;
+                    return 'Computer-win';
+                }
+                else if(computerMove==='Bowl'){
+                    score.tie++;
+                    return 'Game-is-Tie';
+                }
+                else if(computerMove==='Stump'){
+                    score.win++;
+                    return 'User-Win';
+                }
+            }
+            else {
+                if(computerMove==='Bowl'){
+                    score.lost++;
+                    return 'Computer-win' ;
+                }
+                else if(computerMove==='Stump'){
+                    score.tie++;
+                    return 'Game-is-Tie';
+                }
+                else if(computerMove==='Bat'){
+                    score.win++;
+                    return 'User-Win';
+                }  
+            }
+
+        }
+
+        function showResult(userMove , computerMove , result){
+
+            localStorage.setItem('Score',JSON.stringify(score));
+
+            document.querySelector('#user-move').innerText=
+            userMove ? `user chooses : ${userMove}` : '' ;
+
+            document.querySelector('#computer-move').innerText=
+            computerMove ? `computer chooses : ${computerMove}` : '' ;
+
+            document.querySelector('#result').innerText = result || '';
+
+            document.querySelector('#score').innerText = score.displayScore();
+    }
+
+        
+    </script>
+</body>
+</html>
